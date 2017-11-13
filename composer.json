@@ -1,0 +1,20 @@
+{
+  "name": "rgen3/php-process-watcher",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "git@github.com:rgen3/php-process-watcher.git"
+    }
+  ],
+  "authors": [
+    {
+      "name": "rgen3",
+      "email": "rgen3@mail.ru"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "rgen3\\watcher\\": ""
+    }
+  }
+}

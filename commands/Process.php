@@ -1,6 +1,6 @@
 <?php
 
-namespace console\components\watcher\commands;
+namespace rgen3\watcher\commands;
 
 /**
  * Interface Process

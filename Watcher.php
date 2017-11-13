@@ -1,8 +1,8 @@
 <?php
 
-namespace console\components\watcher;
+namespace rgen3\watcher;
 
-use console\components\watcher\commands\Process;
+use rgen3\watcher\commands\Process;
 
 /**
  * Class Watcher
