@@ -6,7 +6,7 @@ namespace rgen3\watcher\commands;
  * Class AbstarctProcess
  * @package console\components\watcher\commands
  */
-abstract class AbstarctProcess implements Process
+abstract class AbstractProcess implements Process
 {
     /**
      * Resource returned by proc_open
