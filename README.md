@@ -10,7 +10,7 @@ composer require rgen3/php-process-watcher
 Usage example
 ---
 
-###Create task object
+### Create task object
 ```
 use rgen3\watcher\commands\AbstractProcess;
 
@@ -49,7 +49,7 @@ class Sync extends AbstractProcess
 }
 ```
 
-###How to run watcher
+### How to run watcher
 
 ```
 // Creates watcher instance
