@@ -36,7 +36,7 @@ interface Process {
      *
      * @return array
      */
-    public static function getDescriptor() : array;
+    public function getDescriptor() : array;
 
     /**
      * Specifies the command that have to be executed,
@@ -52,7 +52,9 @@ interface Process {
      *
      * @return string
      */
-    public static function getCmd() : string;
+    public function getCmd() : string;
+
+    public function setArguments(array $arguments);
 
     /**
      * Actions on process start

@@ -37,7 +37,7 @@ abstract class AbstractProcess implements Process
      * For more information see:
      * @see Process::getDescriptor()
      */
-    public static function getDescriptor(): array
+    public function getDescriptor(): array
     {
         return [
             0 => array("pipe", "r"),
@@ -190,8 +190,8 @@ abstract class AbstractProcess implements Process
     public function startProcess()
     {
         echo "Start process";
-        $descriptor = static::getDescriptor();
-        $this->resource = proc_open(static::getCmd(), $descriptor, $this->pipes);
+        $descriptor = $this->getDescriptor();
+        $this->resource = proc_open($this->getCmd(), $descriptor, $this->pipes);
         return $this;
     }
 
