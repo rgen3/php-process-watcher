@@ -10,10 +10,37 @@ use rgen3\watcher\commands\Process;
  */
 class Watcher
 {
+    private $restartMode = true;
+
     /**
      * Second for process status update
      */
     private $processes = [];
+
+    private $closedProcesses = [];
+
+    public function getClosedProcesses()
+    {
+        return $this->closedProcesses;
+    }
+
+    public function clearClosedProcesses()
+    {
+        $this->closedProcesses = [];
+        return $this;
+    }
+
+    public function enableRestartMode()
+    {
+        $this->restartMode = true;
+        return $this;
+    }
+
+    public function disableRestartMode()
+    {
+        $this->restartMode = false;
+        return $this;
+    }
 
     /**
      * Pushes process to queue
@@ -40,9 +67,7 @@ class Watcher
     public function run()
     {
         foreach ($this->processes as $process) {
-            $process->beforeStart();
-            $process->startProcess();
-            $process->afterStart();
+            $this->startProcess($process);
             $process->setStatus();
         }
     }
@@ -52,13 +77,33 @@ class Watcher
      */
     public function monitor()
     {
-        foreach ($this->processes as $process) {
+        foreach ($this->processes as $key => $process) {
             $process->updateStatus();
             if (!$process->isRunning())
             {
-                $this->restartProcess($process);
+                $this->closedProcesses[] = $process;
+                if ($this->restartMode) {
+                    $this->restartProcess($process);
+                } else {
+                    $this->closeProcess($process);
+                    unset($this->processes[$key]);
+                }
             }
         }
+    }
+
+    private function closeProcess(Process $process)
+    {
+        $process->beforeStop();
+        $process->closeProcess();
+        $process->afterStop();
+    }
+
+    private function startProcess(Process $process) 
+    {
+        $process->beforeStart();
+        $process->startProcess();
+        $process->afterStart();
     }
 
     /**
@@ -68,11 +113,7 @@ class Watcher
     private function restartProcess(Process $process)
     {
         echo "Restarting process ", $process->getCommand(), PHP_EOL;
-        $process->beforeStop();
-        $process->closeProcess();
-        $process->afterStop();
-        $process->beforeStart();
-        $process->startProcess();
-        $process->afterStart();
+        $this->closeProcess($process);
+        $this->startProcess($process);
     }
 }
