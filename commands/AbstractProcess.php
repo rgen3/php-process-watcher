@@ -189,9 +189,11 @@ abstract class AbstractProcess implements Process
      */
     public function startProcess()
     {
-        echo "Start process";
+        echo "Start process", PHP_EOL;
         $descriptor = $this->getDescriptor();
         $this->resource = proc_open($this->getCmd(), $descriptor, $this->pipes);
+        $this->setStatus();
+        posix_setpgid($this->getPid(), $this->getPid());
         return $this;
     }
 
@@ -205,8 +207,24 @@ abstract class AbstractProcess implements Process
      */
     public function closeProcess()
     {
+        foreach ($this->pipes as &$pipe) {
+            if(is_resource($pipe)) {
+                fclose($pipe);
+            }
+        }
+        posix_kill(-$this->getPid(), 9);
         proc_close($this->resource);
         return $this;
+    }
+
+    public function terminateProcess($sig = 15) 
+    {
+        foreach ($this->pipes as &$pipe) {
+            if(is_resource($pipe)) {
+                fclose($pipe);
+            }
+        }
+        proc_terminate($this->resource, $sig);
     }
 
     /**
@@ -218,7 +236,7 @@ abstract class AbstractProcess implements Process
     {
         return [
             'command' => $this->getCommand(),
-            'descriptor' => static::getDescriptor(),
+            'descriptor' => $this->getDescriptor(),
             'statusInfo' => $this->status,
         ];
     }

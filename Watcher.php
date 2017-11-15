@@ -19,6 +19,27 @@ class Watcher
 
     private $closedProcesses = [];
 
+    private $exit = false;
+
+    public function shutdown($signo)
+    {
+        var_dump($signo);
+        foreach ($this->processes as $key => $process)
+        {
+            $process->updateStatus();
+            $process->terminateProcess();
+            $process->closeProcess();
+            unset($this->processes[$key]);
+        }
+
+        $this->exit = true;
+    }
+
+    public function exit() 
+    {
+        return $this->exit;
+    }
+
     public function getClosedProcesses()
     {
         return $this->closedProcesses;
